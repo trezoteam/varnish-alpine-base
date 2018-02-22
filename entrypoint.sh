@@ -1,4 +1,13 @@
 #!/bin/bash
+
+#Remove any previous 'varnish' entries from /etc/opt/nginx_hosts
+sed '/\(\t\| \)varnish$/d' /etc/opt/nginx_hosts
+
+#Add current IP into /etc/opt/nginx_hosts
+IP=$(ifconfig eth0 | grep 'inet addr' | egrep -o '([0-9]{1,3}\.){3}[0-9]{1,3}' | head -n1)
+echo "$IP varnish" >> /etc/opt/nginx_hosts
+
+
 >/etc/varnish/startup.log
 while ! ping -c1 nginx 1>/dev/null 2>/dev/null ;do
 	echo "Unable to resolve 'nginx'. Trying again in 5s" >> /etc/varnish/startup.log
