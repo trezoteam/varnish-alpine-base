@@ -1,11 +1,13 @@
 #!/bin/bash
 
-#Remove any previous 'varnish' entries from /etc/opt/nginx_hosts
-sed '/\(\t\| \)varnish$/d' /etc/opt/nginx_hosts
-
-#Add current IP into /etc/opt/nginx_hosts
-IP=$(ifconfig eth0 | grep 'inet addr' | egrep -o '([0-9]{1,3}\.){3}[0-9]{1,3}' | head -n1)
-echo "$IP varnish" >> /etc/opt/nginx_hosts
+if [ -f /etc/opt/nginx_hosts ];then
+  #Remove any previous 'varnish' entries from /etc/opt/nginx_hosts
+  sed -i '/\(\t\| \)varnish$/d' /etc/opt/nginx_hosts
+  
+  #Add current IP into /etc/opt/nginx_hosts
+  IP=$(ifconfig eth0 | grep 'inet addr' | egrep -o '([0-9]{1,3}\.){3}[0-9]{1,3}' | head -n1)
+  echo "$IP varnish" >> /etc/opt/nginx_hosts
+fi
 
 
 >/etc/varnish/startup.log
